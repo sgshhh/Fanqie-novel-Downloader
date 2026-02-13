@@ -1,86 +1,86 @@
-name: Download Novels
+并发: 名字: 下载小说
 
-on:
-  workflow_dispatch:
-    inputs:
-      book_ids:
-        description: "书籍 ID 列表（逗号或空格分隔）"
-        required: true
-        type: string
-      file_format:
-        description: "输出格式"
-        required: true
-        type: choice
-        options:
-          - txt
+在:
+工作流_调度:
+输入:
+图书身份证明(识别): 7377583741750742078
+描述: "书籍身份证明列表（逗号或空格分隔)"
+需要: 真实的
+类型: 线
+文件格式:txt
+船方不负担装货费用: "输出格式"
+需要: 真实的
+类型: 选择
+选择:
+          - 文本文件(文本文件)
           - epub
-        default: "txt"
-      save_path:
-        description: "保存路径（相对于项目根目录）"
-        required: false
-        type: string
-        default: "downloads"
-      concurrent:
-        description: "并发下载数量（1-5）"
-        required: false
-        type: number
-        default: 3
+系统默认值: "文本"
+保存路径:
+描述: "保存路径（相对于项目根目录）"
+需要: 错误的
+类型: 线
+系统默认值: "下载"
+同时发生的:
+描述: "并发下载数量（1-5）"
+需要: 错误的
+类型: 数字
+系统默认值: 3
 
-permissions:
-  contents: read
+许可:
+内容: 阅读
 
-env:
-  PYTHONUTF8: "1"
-  PYTHONIOENCODING: utf-8
+包封/包围（动词包围的简写):
+PYTHONUTF8: "1"
+关于Pythonioencoding编码编码编码编码编码编码: UTF-8
 
-jobs:
-  download:
-    runs-on: ubuntu-latest
-    name: Download Novels
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+工作:
+下载::
+运行:Ubuntu-最新版: Ubuntu-最新版
+名称:下载小说: 下载小说
+步骤::
+- 使用: 动作/签出@v4uses: 动作/签出@v4
+使用::
+提取深度:1: 1
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: pip
-          cache-dependency-path: config/requirements.txt
+-用途：操作/设置-python@v5uses: 操作/设置-python@v5
+使用::
+大蟒版本:"3.11": "3.11"
+缓存:画中画: 点
+缓存依赖路径:配置/要求。文本文件（textfile）: 配置/要求。文本文件（textfile）
 
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update -q
-          sudo apt-get install -y libheif1 libheif-dev
+- 名称:安装系统依赖项名字: 我安装系统依赖项
+奔跑: |
+sudo apt-get更新
+sudo apt-get install-y libheif 1 libheif-dev
 
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install --prefer-binary -r config/requirements.txt
+      - 名字: 安装计算机编程语言依赖项
+奔跑: |
+python -m pip安装-升级点
+python-m pip安装-首选-二进制-r配置/要求。文本文件(文本文件)
 
-      - name: Parse book IDs
-        id: parse_ids
-        shell: python
-        env:
-          RAW_IDS: ${{ github.event.inputs.book_ids }}
-        run: |
-          import os, re
-          raw = os.environ["RAW_IDS"]
-          ids = re.split(r"[,\s]+", raw.strip())
-          ids = [i for i in ids if i]
-          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-              f.write(f"book_ids={' '.join(ids)}\n")
-              f.write(f"count={len(ids)}\n")
-          print(f"Parsed {len(ids)} book IDs: {' '.join(ids)}")
+      - 名字: 解析图书身份证明(识别)
+身份证明(识别): 解析标识
+壳: 大蟒
+包封/包围（动词包围的简写):
+原始身份证明(识别): ${{github.event.inputs.book_ids}}
+奔跑: |
+导入操作系统，回复
+raw = os.environ["RAW_IDS"]["RAW_IDS"]
+ids = re.split(r "，s]+"，raw.strip())"[,\s]+", raw.strip())
+ids = [i for i in ids if i][i for i in ids if i]
+以open(OS . environ[" GITHUB _ OUTPUT "]，" a ")为f::
+f.write(f"book_ids={ ' '。join(ids)} n ")"book_ids={' '.join(ids)}\n")
+f.write(f"count={len(ids)} n ")"count={len(ids)}\n")
+print(f"Parsed {len(ids)}图书id:{ ' '。join(ids)} "): {' '.join(ids)}")
 
-      - name: Download novels
-        id: download
-        run: |
-          mkdir -p "${{ github.event.inputs.save_path }}"
+-名称:下载小说name: Download novels
+id:下载: download
+运行:: |
+mkdir-p " $ { { github . event . inputs . save _ path } } "
 
-          python core/cli.py batch-download \
-            ${{ steps.parse_ids.outputs.book_ids }} \
-            --path "${{ github.event.inputs.save_path }}" \
+python core/cli.py批量下载
+$ { { steps . parse _ ids . outputs . book _ ids } }
+-path " $ { { github . event . inputs . save _ path } } " 
             --format "${{ github.event.inputs.file_format }}" \
             --concurrent ${{ github.event.inputs.concurrent }} \
             && echo "status=success" >> "$GITHUB_OUTPUT" \
@@ -104,58 +104,58 @@ jobs:
           fi
 
       - uses: actions/upload-artifact@v4
-        if: steps.stats.outputs.file_count > 0
-        with:
-          name: novels-${{ github.event.inputs.file_format }}-${{ github.run_number }}
-          path: ${{ github.event.inputs.save_path }}/**/*.${{ github.event.inputs.file_format }}
-          retention-days: 30
-          if-no-files-found: warn
+if:steps . stats . outputs . file _ count > 0: steps.stats.outputs.file_count > 0
+使用::
+姓名:小说-$ { { github . event . inputs . file _ format } }-$ { { github . run _ number } }: novels-${{ github.event.inputs.file_format }}-${{ github.run_number }}
+路径:$ { { github . event . inputs . save _ path } }/* */*。$ { { github . event . inputs . file _ format } }: ${{ github.event.inputs.save_path }}/**/*.${{ github.event.inputs.file_format }}
+保留天数:30天: 30
+如果没有找到文件:警告: 警告
 
-      - name: Summary
-        if: always()
-        run: |
-          cat >> "$GITHUB_STEP_SUMMARY" <<'HEADER'
+-名称:摘要name: Summary
+如果:总是(): always()
+运行:: |
+猫> >" $ GITHUB _ STEP _ SUMMARY " < < '标题'
           ## 小说下载报告
 
           ### 下载配置
           | 项目 | 值 |
           | :--- | :--- |
-          HEADER
+页眉
 
-          cat >> "$GITHUB_STEP_SUMMARY" <<EOF
-          | 书籍数量 | ${{ steps.parse_ids.outputs.count }} |
-          | 输出格式 | \`${{ github.event.inputs.file_format }}\` |
-          | 并发数 | ${{ github.event.inputs.concurrent }} |
-          | 保存路径 | \`${{ github.event.inputs.save_path }}\` |
+猫> >" $ GITHUB _ STEP _ SUMMARY "< < EOF
+书籍数量$ { {台阶。parse _ ids。产出。数数} }
+输出格式` $ { {github。事件。投入。文件格式} } `
+并发数$ { {github。事件。投入。同时发生的} }
+保存路径` $ { {github。事件。投入。保存路径} } `
 
           ### 下载结果
           | 项目 | 值 |
           | :--- | :--- |
-          | 成功文件 | ${{ steps.stats.outputs.file_count }} |
-          | 总大小 | ${{ steps.stats.outputs.total_size }} |
-          | Artifact | \`novels-${{ github.event.inputs.file_format }}-${{ github.run_number }}\` |
-          EOF
+成功文件$ { {步。统计数据。产出文件计数} }{ {台阶。统计数据。产出。文件计数} }{ {步。统计数据。产出文件计数} }{ {台阶。统计数据。产出。文件计数} }
+总大小$ { {步。统计数据。产出总计_大小} }{ {台阶。统计数据。产出。总计_大小} }{ {步。统计数据。产出总计_大小} }{ {台阶。统计数据。产出。总计_大小} }
+神器`小说-$ { {github .事件。投入.文件_格式} }-$ { {github .运行编号} } `{ {github。事件。投入。文件格式} }-$ { {github。运行编号} } `{ {github .事件。投入.文件_格式} }-$ { {github .运行编号} } `{ {github。事件。投入。文件格式} }-$ { {github。运行编号} } `
+文件结束
 
-          FILE_COUNT="${{ steps.stats.outputs.file_count }}"
-          if [ "$FILE_COUNT" -gt "0" ] 2>/dev/null; then
-            cat >> "$GITHUB_STEP_SUMMARY" <<'GUIDE'
+文件计数=" $ { {步骤。统计数据。产出。FILE _ COUNT } } "“$ { {步。统计数据。产出。FILE _ COUNT } } "" $ { {步骤。统计数据。产出. FILE _ COUNT } } "“$ { {步。统计数据。产出。FILE _ COUNT } } "
+如果[" $ FILE _ COUNT "-gt" 0 "]2 >/dev/null；然后[" $ FILE _ COUNT "-gt" 0 "]2 >/dev/null；然后[" $ FILE _ COUNT "-gt" 0 "]2 >/dev/null；然后[" $ FILE _ COUNT "-gt" 0 "]2 >/dev/null；然后
+卡特彼勒> > " $GITHUB_STEP_SUMMARY " < < '指南'" $GITHUB_STEP_SUMMARY " < < '指南'" $GITHUB_STEP_SUMMARY " < < '指南'" $GITHUB_STEP_SUMMARY " < < '指南'
 
           ### 如何下载
-          1. 进入本次运行的 **Summary** 页面
-          2. 在页面底部找到 **Artifacts** 区域
-          3. 点击对应 Artifact 下载压缩包
+1.进入本次运行的**摘要* *页面
+2.在页面底部找到**工件* *区域
+3.点击对应假象下载压缩包
           4. 解压后即可获得所有下载的小说文件
 
-          > Artifact 将保留 30 天
-          GUIDE
-          else
-            cat >> "$GITHUB_STEP_SUMMARY" <<'FAIL'
+>神器将保留 30 天
+向导
+其他
+猫>>" $GITHUB_STEP_SUMMARY " < < '失败'" $GITHUB_STEP_SUMMARY " <<'失败'" $GITHUB_STEP_SUMMARY " < < '失败'" $GITHUB_STEP_SUMMARY " <<'失败'" $GITHUB_STEP_SUMMARY " < < '失败'" $GITHUB_STEP_SUMMARY " <<'失败'" $GITHUB_STEP_SUMMARY " < < '失败'" $GITHUB_STEP_SUMMARY " <<'失败'
 
           ### 下载失败
           没有成功下载任何文件，请检查:
-          - 书籍 ID 是否正确
-          - API 服务是否可用
+-书籍身份证明是否正确书籍身份证明是否正确
+- 应用程序接口服务是否可用应用程序接口服务是否可用应用程序接口服务是否可用应用程序接口服务是否可用应用程序接口服务是否可用应用程序接口服务是否可用应用程序接口服务是否可用应用程序接口服务是否可用
           - 查看上方日志了解详细错误信息
-          FAIL
-            exit 1
-          fi
+失败
+1号出口
+船方不负担装货费用
