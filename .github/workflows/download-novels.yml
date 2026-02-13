@@ -1,68 +1,68 @@
-name: Download Novels
+名称:下载小说: 下载小说
 
-on:
-  workflow_dispatch:
-    inputs:
-      book_ids:
-        description: "书籍 ID 列表（逗号或空格分隔）"
-        required: true
-        type: string
-      file_format:
-        description: "输出格式"
-        required: true
-        type: choice
-        options:
-          - txt
-          - epub
-        default: "txt"
-      save_path:
-        description: "保存路径（相对于项目根目录）"
-        required: false
-        type: string
-        default: "downloads"
-      concurrent:
-        description: "并发下载数量（1-5）"
-        required: false
-        type: number
-        default: 3
+开启::
+工作流_调度::
+输入::
+图书身份证明（identification）:
+描述: "书籍身份证明列表（逗号或空格分隔)": "书籍身份证明列表（逗号或空格分隔)"
+必填: 真: 7377583741750742078真实的
+类型:字符串: 线
+文件格式::
+描述: "输出格式": "输出格式"
+必填：真:txt真实的
+类型:选择: 选择
+选项::
+- txttxt
+- 关于epubepub
+默认值: "文本": "文本"
+保存路径::
+描述: "保存路径（相对于项目根目录)": "保存路径（相对于项目根目录）"
+必填:假: 错误的
+类型:字符串: 线
+默认:“下载”: "下载"
+ 描述:
+描述: "并发下载数量（1-5）"
+需要: 错误的
+类型: 数字
+系统默认值: 3
 
-permissions:
-  contents: read
+许可:
+内容: 阅读
 
-env:
-  PYTHONUTF8: "1"
-  PYTHONIOENCODING: utf-8
+包封/包围（动词envelop的简写）:
+PYTHONUTF8: "1"
+ 关于Pythonioencoding编码: PYTHONIOENCODING编码
 
-jobs:
-  download:
-    runs-on: ubuntu-latest
-    name: Download Novels
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+工作:
+下载::
+运行:Ubuntu-最新版: Ubuntu-最新版
+名称:下载小说: 下载小说
+步骤::
+- 使用: 动作/签出@v4uses: 动作/签出@v4
+使用::
+提取深度:1: 1
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: pip
-          cache-dependency-path: config/requirements.txt
+      - 随着: 操作/设置-python@v5
+随着:
+python版本: "3.11"
+隐藏物: 点
+缓存依赖路径: config/requirements.txt
 
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update -q
-          sudo apt-get install -y libheif1 libheif-dev
+      - 名字: 我安装系统依赖项
+奔跑: |
+sudo apt-get更新问
+sudo apt-get install-y libheif 1 libheif-dev
 
-      - name: Install Python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install --prefer-binary -r config/requirements.txt
+安装计算机编程语言依赖项-名字: 我安装Python依赖项
+奔跑: |
+python -m pip安装-升级pip
+python-m pip install-prefere-binary-r配置/要求。文本文件（textfile）
 
-      - name: Parse book IDs
-        id: parse_ids
-        shell: python
-        env:
-          RAW_IDS: ${{ github.event.inputs.book_ids }}
+解析图书idname: Parse book IDs
+解析标识: parse_ids
+奔跑: 大蟒
+包封/包围（动词包围的简写):
+原始id: ${{github.event.inputs.book_ids}}
         run: |
           import os, re
           raw = os.environ["RAW_IDS"]
